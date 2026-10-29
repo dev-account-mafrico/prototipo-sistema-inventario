@@ -186,8 +186,8 @@ function renderGrid() {
     dom.pageIndicator.textContent = "P\u00e1gina 0 de 0";
     dom.tableWrapper.innerHTML = `
       <div class="empty-state">
-        <h3>Sube tu archivo Excel</h3>
-        <p>Este prototipo te permitir\u00e1 editarlo y volver a exportarlo.</p>
+        <h3>Sube tu archivo</h3>
+        
       </div>
     `;
     return;
