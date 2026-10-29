@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prototipo Inventario Excel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <!-- <div class="hero-block">
+        <h1>Sistema de Inventario</h1>
+      </div> -->
+
+      <section class="panel upload-panel">
+        <h2>Archivo</h2>
+        <label class="upload-box" for="excelFile">
+          <input id="excelFile" type="file" accept=".xlsx,.xls,.xlsm,.csv">
+          <span class="upload-title">Seleccionar Excel</span>
+          <span class="upload-text">Formatos soportados: XLSX, XLS, XLSM, CSV</span>
+        </label>
+
+        <div class="file-summary" id="fileSummary">
+          <span class="status-dot"></span>
+          <div>
+            <strong>No hay archivo cargado</strong>
+            <p>Cuando subas un Excel quedar&aacute; guardado localmente en este navegador.</p>
+          </div>
+        </div>
+
+        <div class="action-grid">
+          <button id="saveLocalBtn" class="btn btn-secondary" disabled>Guardar en navegador</button>
+          <button id="exportBtn" class="btn btn-primary" disabled>Exportar Excel</button>
+          <button id="deleteWorkbookBtn" class="btn btn-danger" disabled>Eliminar archivo guardado</button>
+        </div>
+      </section>
+
+      <section class="panel tools-panel">
+        <h2>Edici&oacute;n</h2>
+
+        <div class="field-group">
+          <label for="pageSizeSelect">Filas por p&aacute;gina</label>
+          <select id="pageSizeSelect">
+            <option value="25">25</option>
+            <option value="50" selected>50</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label for="sheetSearch">Buscar en hoja activa</label>
+          <input id="sheetSearch" type="search" placeholder="Buscar c&oacute;digo, detalle, precio...">
+        </div>
+
+        <div class="selection-card" id="selectionCard">
+          <p class="selection-caption">Celda seleccionada</p>
+          <strong id="selectedCellLabel">Ninguna</strong>
+          <span id="selectedCellMeta">Selecciona una celda para editarla.</span>
+        </div>
+
+        <div class="field-group">
+          <label for="formulaBar">Editor de celda</label>
+          <textarea id="formulaBar" rows="4" placeholder="Aqu&iacute; puedes escribir un valor o una f&oacute;rmula, por ejemplo =SUMA(H5:I5)"></textarea>
+        </div>
+
+        <div class="action-grid">
+          <button id="applyCellBtn" class="btn btn-secondary" disabled>Aplicar cambio</button>
+          <button id="clearCellBtn" class="btn btn-light" disabled>Vaciar celda</button>
+          <button id="addRowBtn" class="btn btn-secondary" disabled>Agregar fila abajo</button>
+          <button id="deleteRowBtn" class="btn btn-light danger-text" disabled>Eliminar fila</button>
+        </div>
+      </section>
+
+      <section class="panel info-panel">
+        <h2>Notas del prototipo</h2>
+        <ul>
+          <li>Las hojas del Excel se muestran en pesta&ntilde;as para navegar entre inventario, presupuesto u otras hojas.</li>
+          <li>Las f&oacute;rmulas se conservan al exportar. Excel recalcular&aacute; el resultado al abrir el archivo descargado.</li>
+          <li>El archivo subido queda almacenado localmente en este navegador hasta que lo elimines.</li>
+        </ul>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <section class="workspace-topbar">
+        <div>
+          <p class="eyebrow">Nombre Documento</p>
+          <h2 id="workbookTitle">Sin archivo</h2>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <span>Hojas</span>
+            <strong id="sheetCount">0</strong>
+          </div>
+          <div class="metric">
+            <span>Filas visibles</span>
+            <strong id="visibleRowsCount">0</strong>
+          </div>
+          <div class="metric">
+            <span>Estado</span>
+            <strong id="changeState">Sin cambios</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel sheet-panel">
+        <div class="sheet-tabs" id="sheetTabs"></div>
+
+        <div class="table-toolbar">
+          <div class="toolbar-group">
+            <button id="prevPageBtn" class="btn btn-light" disabled>Anterior</button>
+            <div class="page-indicator" id="pageIndicator">P&aacute;gina 0 de 0</div>
+            <button id="nextPageBtn" class="btn btn-light" disabled>Siguiente</button>
+          </div>
+
+          <div class="toolbar-group subtle" id="sheetMeta">
+            Carga un archivo Excel para comenzar.
+          </div>
+        </div>
+
+        <div class="table-wrapper" id="tableWrapper">
+          <div class="empty-state">
+            <h3>Sube tu archivo Excel</h3>
+            <p>
+              Este prototipo te permitir&aacute; cargar el inventario, revisar las hojas como
+              <strong>Hoja1</strong> y <strong>Presupuesto</strong>, editar datos y descargar el Excel actualizado.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="confirmModal">
+    <div class="modal">
+      <h3 id="modalTitle">Confirmar acci&oacute;n</h3>
+      <p id="modalMessage">Esta acci&oacute;n no se puede deshacer.</p>
+      <div class="modal-actions">
+        <button id="modalCancelBtn" class="btn btn-light">Cancelar</button>
+        <button id="modalConfirmBtn" class="btn btn-danger">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
